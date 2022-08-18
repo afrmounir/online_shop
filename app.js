@@ -2,6 +2,8 @@ const path = require('path');
 
 const express = require('express');
 
+const rootDir = require('./utilities/path');
+
 const app = express();
 
 const adminRoutes = require('./routes/admin');
