@@ -31,6 +31,14 @@ exports.getProduct = (req, res, next) => {
   });
 };
 
+exports.postCart = (req, res, next) => {
+  const productId = req.body.productId;
+  Product.findById(productId, product => {
+    console.log(product);
+  });
+  res.redirect('/cart');
+};
+
 exports.getCart = (req, res, next) => {
   res.render('shop/cart', {  
     pageTitle: 'Panier',
