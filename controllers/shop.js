@@ -25,7 +25,7 @@ exports.getProduct = (req, res, next) => {
   const productId = req.params.productId;
   Product.findById(productId, product => {
     res.render('shop/product-detail', {
-      product: product,
+      product,
       pageTitle: 'Détails du produit',
       path: '/products'
     })
@@ -41,21 +41,33 @@ exports.postCart = (req, res, next) => {
 };
 
 exports.getCart = (req, res, next) => {
-  res.render('shop/cart', {  
-    pageTitle: 'Panier',
-    path: '/cart'
+  Cart.getCart(cart => {
+    Product.fetchAll(products => {
+      const cartProducts = [];
+      for(product of products) { //to check if a product is also in the cart because a product might have been deleted or updated while the item was in the user's cart
+        const cartProductData = cart.products.find(p => p.id === product.id);
+        if(cartProductData) {
+          cartProducts.push({productData: product, qty: cartProductData.qty});
+        }
+      }
+      res.render('shop/cart', {
+        pageTitle: 'Panier',
+        path: '/cart',
+        products: cartProducts
+      });
+    });
   });
 };
 
 exports.getOrders = (req, res, next) => {
-  res.render('shop/orders', {  
+  res.render('shop/orders', {
     pageTitle: 'Mes Commandes',
     path: '/orders'
   });
 };
 
 exports.getCheckout = (req, res, next) => {
-  res.render('shop/checkout', {  
+  res.render('shop/checkout', {
     pageTitle: 'Total',
     path: '/checkout'
   });
