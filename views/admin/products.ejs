@@ -29,7 +29,7 @@
               <form action="/admin/delete-product" method="POST">
                 <button class="btn" type="submit">Supprimer</button>
               </form>
-              <a href="/admin/edit-product" class="btn">Éditer</a>
+              <a href="/admin/edit-product/<%= product.id %>?edit=true" class="btn">Éditer</a>
             </div>
           </article>
         <% } %>
