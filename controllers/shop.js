@@ -2,23 +2,27 @@ const Product = require('../models/products');
 const Cart = require('../models/cart');
 
 exports.getIndex = (req, res, next) => {
-  Product.fetchAll((products) => {
-    res.render('shop/index', {
-      prods: products,
-      pageTitle: 'Boutique',
-      path: '/'
-    });
-  });
+  Product.fetchAll()
+    .then(([rows, fieldData]) => {
+      res.render('shop/index', {
+        prods: rows,
+        pageTitle: 'Boutique',
+        path: '/'
+      });
+    })
+    .catch(err => console.log(err));
 };
 
 exports.getProducts = (req, res, next) => {
-  Product.fetchAll((products) => {
-    res.render('shop/product-list', {
-      prods: products,
-      pageTitle: 'Produits',
-      path: '/products'
-    });
-  });
+  Product.fetchAll()
+    .then(([rows, fieldData]) => {
+      res.render('shop/product-list', {
+        prods: rows,
+        pageTitle: 'Produits',
+        path: '/products'
+      });
+    })
+    .catch(err => console.log(err));
 };
 
 exports.getProduct = (req, res, next) => {
@@ -44,10 +48,10 @@ exports.getCart = (req, res, next) => {
   Cart.getCart(cart => {
     Product.fetchAll(products => {
       const cartProducts = [];
-      for(product of products) { //to check if a product is also in the cart because a product might have been deleted or updated while the item was in the user's cart
+      for (product of products) { //to check if a product is also in the cart because a product might have been deleted or updated while the item was in the user's cart
         const cartProductData = cart.products.find(p => p.id === product.id);
-        if(cartProductData) {
-          cartProducts.push({productData: product, qty: cartProductData.qty});
+        if (cartProductData) {
+          cartProducts.push({ productData: product, qty: cartProductData.qty });
         }
       }
       res.render('shop/cart', {
