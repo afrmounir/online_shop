@@ -27,13 +27,15 @@ exports.getProducts = (req, res, next) => {
 
 exports.getProduct = (req, res, next) => {
   const productId = req.params.productId;
-  Product.findById(productId, product => {
-    res.render('shop/product-detail', {
-      product,
-      pageTitle: 'Détails du produit',
-      path: '/products'
+  Product.findById(productId)
+    .then(([product]) => {
+      res.render('shop/product-detail', {
+        product: product[0],
+        pageTitle: 'Détails du produit',
+        path: '/products'
+      })
     })
-  });
+    .catch(err => console.log(err));
 };
 
 exports.postCart = (req, res, next) => {
