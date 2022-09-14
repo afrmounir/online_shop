@@ -49,22 +49,19 @@ exports.postCart = (req, res, next) => {
 };
 
 exports.getCart = (req, res, next) => {
-  Cart.getCart(cart => {
-    Product.fetchAll(products => {
-      const cartProducts = [];
-      for (product of products) { //to check if a product is also in the cart because a product might have been deleted or updated while the item was in the user's cart
-        const cartProductData = cart.products.find(p => p.id === product.id);
-        if (cartProductData) {
-          cartProducts.push({ productData: product, qty: cartProductData.qty });
-        }
-      }
+  req.user
+    .getCart()
+    .then(cart => {
+      return cart.getProducts();
+    })
+    .then(products => {
       res.render('shop/cart', {
         pageTitle: 'Panier',
         path: '/cart',
-        products: cartProducts
+        products: products
       });
-    });
-  });
+    })
+    .catch(err => console.log(err));
 };
 
 exports.postCartDeleteProduct = (req, res, next) => {
