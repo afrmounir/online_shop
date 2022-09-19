@@ -10,13 +10,10 @@ exports.getAddProduct = (req, res, next) => {
 
 exports.postAddProduct = (req, res, next) => {
   const { title, imageURL, price, description } = req.body;
-  req.user
-    .createProduct({
-      title,
-      imageURL,
-      price,
-      description
-    })
+  const product = new Product(title, price, description, imageURL);
+
+  product
+    .save()
     .then(result => {
       console.log('Created Product');
       res.redirect('/admin/products');
