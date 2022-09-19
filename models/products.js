@@ -1,6 +1,17 @@
-const { Sequelize, DataTypes } = require('sequelize');
+const getDb = require('../utilities/database').getDb;
 
-const sequelize = require('../utilities/database');
+class Product {
+  constructor(title, price, description, imageURL) {
+    this.title = title;
+    this.price = price;
+    this.description = description;
+    this.imageURL = imageURL;
+  }
+
+  save() {
+
+  }
+}
 
 const Product = sequelize.define('product', {
   id: {
