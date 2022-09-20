@@ -7,7 +7,7 @@ class Product {
     this.price = price;
     this.description = description;
     this.imageURL = imageURL;
-    this._id = new mongodb.ObjectId(id); // mongodb store id in a 12 byte object (BSON)
+    this._id = id ? new mongodb.ObjectId(id) : null; // mongodb store id in a 12 byte object (BSON). The ternary expression is for the save method => this_id is initialize, even if we pass no id this will create an object and store in it so _id will always be defined.
   }
 
   save() {
