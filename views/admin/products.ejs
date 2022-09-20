@@ -30,7 +30,7 @@
                 <input type="hidden" value="<%= product.id %>" name="productId">
                 <button class="btn" type="submit">Supprimer</button>
               </form>
-              <a href="/admin/edit-product/<%= product.id %>?edit=true" class="btn">Éditer</a>
+              <a href="/admin/edit-product/<%= product._id %>?edit=true" class="btn">Éditer</a>
             </div>
           </article>
         <% } %>
