@@ -4,7 +4,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 
 const errorController = require('./controllers/error');
-const User = require('./models/user');
+// const User = require('./models/user');
 
 const app = express();
 
@@ -17,15 +17,15 @@ const shopRoutes = require('./routes/shop');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')))
 
-app.use((req, res, next) => {
-  User
-    .findById('6329c0b6b7939ba30474d19a')
-    .then(user => {
-      req.user = new User(user.username, user.email, user.cart, user._id);
-      next();
-    })
-    .catch(err => console.log(err));
-});
+// app.use((req, res, next) => {
+//   User
+//     .findById('6329c0b6b7939ba30474d19a')
+//     .then(user => {
+//       req.user = new User(user.username, user.email, user.cart, user._id);
+//       next();
+//     })
+//     .catch(err => console.log(err));
+// });
 
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
