@@ -44,38 +44,12 @@ exports.postCart = (req, res, next) => {
 
   Product
     .findById(productId)
-    .then(product => {
-      return req.user.addToCart(product);
+    .then(product => req.user.addToCart(product))
+    .then(result => {
+      console.log(result);
+      res.redirect('/cart');
     })
-    .then(result => console.log(result))
     .catch(err => console.log(err));
-
-
-  // let fetchedCart; // make the cart available in the nested Product
-  // let newQuantity = 1;
-  // req.user
-  //   .getCart()
-  //   .then(cart => {
-  //     fetchedCart = cart;
-  //     return cart.getProducts({ where: { id: productId } });
-  //   })
-  //   .then(products => {
-  //     let product
-  //     if (products) {
-  //       product = products[0];
-  //     }
-  //     if (product) {
-  //       const oldQuantity = product.cartItem.quantity;
-  //       newQuantity = oldQuantity + 1;
-  //       return product;
-  //     }
-  //     return Product.findByPk(productId);
-  //   })
-  //   .then(product => {
-  //     return fetchedCart.addProduct(product, { through: { quantity: newQuantity } }); // say to sequelize which model to use in in-between model and for that table what additional information to set the values in there
-  //   })
-  //   .then(() => res.redirect('/cart'))
-  //   .catch(err => console.log(err));
 };
 
 exports.getCart = (req, res, next) => {
