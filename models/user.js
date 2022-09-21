@@ -17,8 +17,18 @@ class User {
   }
 
   addToCart(product) {
-    // const cartProduct = this.cart.items.findIndex((p) => p._id === product._id);
-    const updatedCart = { items: [{ productId: new mongodb.ObjectId(product._id), quantity: 1 }] };
+    const cartProductIndex = this.cart.items.findIndex(p => p.productId.toString() === product._id.toString()); // toString => _id is retrieved from db, _id is treated as a string in js but it's not of type string so === will be false.
+    let newQuantity = 1;
+    const updatedCartItems = [...this.cart.items];
+
+    if (cartProductIndex >= 0) {
+      newQuantity += this.cart.items[cartProductIndex].quantity;
+      updatedCartItems[cartProductIndex].quantity = newQuantity;
+    } else {
+      updatedCartItems.push({ productId: new mongodb.ObjectId(product._id), quantity: newQuantity });
+    }
+
+    const updatedCart = { items: updatedCartItems };
     const db = getDb();
     return db
       .collection('users')
