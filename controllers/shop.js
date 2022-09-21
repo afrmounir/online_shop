@@ -81,7 +81,6 @@ exports.postCart = (req, res, next) => {
 exports.getCart = (req, res, next) => {
   req.user
     .getCart()
-    .then(cart => cart.getProducts())
     .then(products => {
       res.render('shop/cart', {
         pageTitle: 'Panier',

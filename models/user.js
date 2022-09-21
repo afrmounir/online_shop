@@ -38,6 +38,28 @@ class User {
       );
   }
 
+  getCart() { // return an array of objects => {...p, quantity}
+    const db = getDb();
+    const productsId = this.cart.items.map(i => { // return an array with all the products id in the cart
+      return i.productId
+    });
+
+    return db //this part retrieve the products by id in the products collection and their quantity in the cart collection
+      .collection('products')
+      .find({ _id: { $in: productsId } }).toArray() 
+      .then(products => {
+        return products.map(p => {
+          return {
+            ...p,
+            quantity: this.cart.items.find(i => {
+              return i.productId.toString() === p._id.toString() // toString => _id is retrieved from db, _id is treated as a string in js but it's not of type string so === will be false.
+            }).quantity
+          };
+        });
+      })
+      .catch(err => console.log(err));
+  }
+
   static findById(userId) {
     const db = getDb();
     return db
