@@ -46,7 +46,7 @@ class User {
 
     return db //this part retrieve the products by id in the products collection and their quantity in the cart collection
       .collection('products')
-      .find({ _id: { $in: productsId } }).toArray() 
+      .find({ _id: { $in: productsId } }).toArray()
       .then(products => {
         return products.map(p => {
           return {
@@ -58,6 +58,17 @@ class User {
         });
       })
       .catch(err => console.log(err));
+  }
+
+  deleteCartItem(productId) {
+    const updatedCartItems = this.cart.items.filter(i => i.productId.toString() !== productId.toString());
+    const db = getDb();
+    return db
+      .collection('users')
+      .updateOne(
+        { _id: new mongodb.ObjectId(this._id) },
+        { $set: { cart: { items: updatedCartItems } } }
+      );
   }
 
   static findById(userId) {
