@@ -44,12 +44,9 @@ exports.getEditProduct = (req, res, next) => {
 };
 
 exports.postEditProduct = (req, res, next) => {
-  const { title, imageURL, price, description, productId } = req.body; // updated values
-  const product = new Product(title, price, description, imageURL, productId);
-
-  product
-    .save()
-    .then(result => {
+  Product
+    .findByIdAndUpdate(productId, req.body) //getEditProduct provide product data with the same field name in req.body
+    .then(() => {
       console.log('UPDATED PRODUCT');
       res.redirect('/admin/products');
     })
@@ -69,7 +66,7 @@ exports.postDeleteProduct = (req, res, next) => {
 
 exports.getProducts = (req, res, next) => {
   Product
-    .fetchAll()
+    .find()
     .then(products => {
       res.render('admin/products', {
         prods: products,
