@@ -10,7 +10,7 @@ exports.getAddProduct = (req, res, next) => {
 
 exports.postAddProduct = (req, res, next) => {
   const { title, imageURL, price, description } = req.body;
-  const product = new Product({ title, imageURL, price, description });
+  const product = new Product({ title, imageURL, price, description, userId: req.user }); // mongoose pick the id himself from the entire object
 
   product
     .save()
