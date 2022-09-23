@@ -14,6 +14,11 @@
 		</ul>
 		<ul class="main-header__item-list">
 			<li class="main-header__item"><a class="<%= path === '/login' ? 'active' : '' %>" href="/login">Se Connecter</a></li>
+			<li class="main-header__item">
+				<form action="/logout" method="post">
+					<button type="submit">Se Déconnecter</button>
+				</form>
+			</li>
 		</ul>
 	</nav>
 </header>
