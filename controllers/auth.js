@@ -1,5 +1,5 @@
 exports.getLogin = (req, res, next) => {
-  console.log(req.get('Cookie').split(';')[0]);
+  console.log(req.session.isLoggedIn);
   res.render('auth/login', {
     pageTitle: 'Se Connecter',
     path: '/login',
@@ -8,6 +8,6 @@ exports.getLogin = (req, res, next) => {
 };
 
 exports.postLogin = (req, res, next) => {
-  res.cookie('loggedIn', true);
+  req.session.isLoggedIn = true;
   res.redirect('/');
 };
