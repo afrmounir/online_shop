@@ -5,20 +5,23 @@
 		<ul class="main-header__item-list">
 			<li class="main-header__item"><a class="<%= path === '/' ? 'active' : '' %>" href="/">Boutique</a></li> 
 			<li class="main-header__item"><a class="<%= path === '/products' ? 'active' : '' %>" href="/products">Produits</a></li>
+			<% if (isAuthenticated) { %>
 			<li class="main-header__item"><a class="<%= path === '/cart' ? 'active' : '' %>" href="/cart">Panier</a></li>
 			<li class="main-header__item"><a class="<%= path === '/orders' ? 'active' : '' %>" href="/orders">Mes Commandes</a></li>
-			<% if (isAuthenticated) { %>
 			<li class="main-header__item"><a class="<%= path === '/admin/add-product' ? 'active' : '' %>" href="/admin/add-product">Ajouter Produits</a></li>
 			<li class="main-header__item"><a class="<%= path === '/admin/products' ? 'active' : '' %>" href="/admin/products">Gestion Produits</a></li>
 			<% } %>
 		</ul>
 		<ul class="main-header__item-list">
-			<li class="main-header__item"><a class="<%= path === '/login' ? 'active' : '' %>" href="/login">Se Connecter</a></li>
-			<li class="main-header__item">
-				<form action="/logout" method="post">
-					<button type="submit">Se Déconnecter</button>
-				</form>
-			</li>
+			<% if (!isAuthenticated) { %>
+				<li class="main-header__item"><a class="<%= path === '/login' ? 'active' : '' %>" href="/login">Se Connecter</a></li>
+			<% } else { %>
+				<li class="main-header__item">
+					<form action="/logout" method="post">
+						<button type="submit">Se Déconnecter</button>
+					</form>
+				</li>
+			<% } %>
 		</ul>
 	</nav>
 </header>
