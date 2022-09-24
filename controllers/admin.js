@@ -46,6 +46,7 @@ exports.getEditProduct = (req, res, next) => {
 };
 
 exports.postEditProduct = (req, res, next) => {
+  const productId = req.body.productId;
   Product
     .findByIdAndUpdate(productId, req.body) //getEditProduct provide product data with the same field name in req.body
     .then(() => {
