@@ -9,6 +9,14 @@ exports.getLogin = (req, res, next) => {
   });
 };
 
+exports.getSignup = (req, res, next) => {
+  res.render('auth/signup', {
+    path: '/signup',
+    pageTitle: 'S\'inscrire',
+    isAuthenticated: false
+  });
+};
+
 exports.postLogin = (req, res, next) => {
   User
     .findById('632c138b592cdae85c0b89a4')
@@ -21,6 +29,10 @@ exports.postLogin = (req, res, next) => {
       });
     })
     .catch(err => console.log(err));
+};
+
+exports.postSignup = (req, res, next) => {
+
 };
 
 exports.postLogout = (req, res, next) => {
