@@ -8,6 +8,9 @@
 
     <main>
         <form class="login-form" action="/signup" method="POST">
+            <% if(errorMessage.length > 0) { %>
+                <div class="user-message user-message--error"><%= errorMessage %></div>
+            <% } %>
             <div class="form-control">
                 <label for="email">E-Mail</label>
                 <input type="email" name="email" id="email">

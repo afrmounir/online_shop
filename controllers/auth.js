@@ -13,7 +13,8 @@ exports.getLogin = (req, res, next) => {
 exports.getSignup = (req, res, next) => {
   res.render('auth/signup', {
     path: '/signup',
-    pageTitle: 'S\'inscrire'
+    pageTitle: 'S\'inscrire',
+    errorMessage: req.flash('error')
   });
 };
 
@@ -54,6 +55,7 @@ exports.postSignup = (req, res, next) => {
     .findOne({ email })
     .then(userDoc => {
       if (userDoc) {
+        req.flash('error', 'Cet e-mail est deja utilisé, veuillez en utiliser un different');
         return res.redirect('/signup');
       }
       return bcrypt.hash(password, 12)
