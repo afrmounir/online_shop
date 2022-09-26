@@ -1,3 +1,5 @@
+const crypto = require('crypto');
+
 const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
 
@@ -106,3 +108,37 @@ exports.getResetPassword = (req, res, next) => {
     errorMessage: req.flash('error')
   });
 };
+
+exports.postResetPassword = (req, res, next) => { // generate a token and send it to the user email to check if the email belong to the actual user who want to reset the password
+  crypto.randomBytes(32, (err, buffer) => {
+    if (err) {
+      console.log(err);
+      return res.redirect('/reset');
+    }
+    const token = buffer.toString('hex'); //the buffer will pass hexadecimal values => to ASCII
+    User
+      .findOne({ email: req.body.email })
+      .then(user => {
+        if (!user) {
+          req.flash('error', 'Aucun compte existant');
+          return res.redirect('/reset');
+        }
+        user.resetToken = token;
+        user.resetTokenExpiration = Date.now() + 360000; //1H in milliseconds 
+        return user.save();
+      })
+      .then(() => {
+        res.redirect('/');
+        transporter.sendMail({
+          from: '<online@shop.com>', // sender address
+          to: req.body.email, // list of receivers
+          subject: "Réinitialisez votre mot de passe", // Subject line
+          html: `
+            <p>Vous avez demandé à réinitialisé votre mot de passe</p>
+            <p>Cliquez ici <a href="/http://localhost:3000/reset/${token}" >pour choisir un nouveau mot de passe</p>
+          `, // html body
+        });
+      })
+      .catch(err => console.log(err));
+  });
+}; 
