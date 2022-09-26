@@ -141,4 +141,19 @@ exports.postResetPassword = (req, res, next) => { // generate a token and send i
       })
       .catch(err => console.log(err));
   });
-}; 
+};
+
+exports.getNewPassword = (req, res, next) => {
+  const token = req.params.token;
+  User
+    .findOne({ resetToken: token, resetTokenExpiration: { $gt: Date.now() } }) // { $gt } : greater than special operator
+    .then(user => {
+      res.render('auth/new-password', {
+        pageTitle: 'Nouveau mot de passe',
+        path: '/new-password',
+        errorMessage: req.flash('error'),
+        userId: user._id.toString()
+      });
+    })
+    .catch(err => console.log(err));
+};
