@@ -98,3 +98,11 @@ exports.postLogout = (req, res, next) => {
     res.redirect('/');
   });
 };
+
+exports.getResetPassword = (req, res, next) => {
+  res.render('auth/reset', {
+    pageTitle: 'Réinitialiser mot de passe',
+    path: '/reset',
+    errorMessage: req.flash('error')
+  });
+};
