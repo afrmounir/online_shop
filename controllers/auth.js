@@ -165,7 +165,7 @@ exports.postNewPassword = (req, res, next) => {
     .findOne({
       resetToken: passwordToken,
       resetTokenExpiration: { $gt: Date.now() },
-      _id: userId // to ensure the user still has the token in the database
+      _id: userId
     })
     .then(user => {
       bcrypt.hash(password, 12)
