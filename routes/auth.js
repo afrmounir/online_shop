@@ -13,9 +13,13 @@ router.post('/login', authController.postLogin);
 
 router.post(
   '/signup',
-  check('email')
-    .isEmail()
-    .withMessage('Veuillez entrer un email valide.'),
+  [
+    check('email', 'Veuillez entrer un email valide.')
+      .isEmail(),
+
+    check('password', 'Veuillez entrez un mot de passe d\'au moins 5 caractères')
+      .isLength({ min: 5 })
+  ],
   authController.postSignup
 );
 
