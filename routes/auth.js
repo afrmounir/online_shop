@@ -16,9 +16,10 @@ router.post(
   [
     check('email', 'Veuillez entrer un email valide.')
       .isEmail(),
-
     check('password', 'Veuillez entrez un mot de passe d\'au moins 5 caractères')
-      .isLength({ min: 5 })
+      .isLength({ min: 5 }),
+    check('password', 'Les mots de passe doivent correspondent')
+      .equals('confirmPassword')
   ],
   authController.postSignup
 );
