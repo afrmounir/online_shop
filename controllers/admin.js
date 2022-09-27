@@ -1,3 +1,4 @@
+const product = require('../models/product');
 const Product = require('../models/product');
 
 exports.getAddProduct = (req, res, next) => {
@@ -46,9 +47,8 @@ exports.getEditProduct = (req, res, next) => {
 exports.postEditProduct = (req, res, next) => {
   const productId = req.body.productId;
   Product
-    .findByIdAndUpdate(productId, req.body) //getEditProduct provide product data with the same field name in req.body
+    .updateOne({ _id: productId, userId: req.user._id.toString() }, req.body) //getEditProduct provide product data with the same field name in req.body
     .then(() => {
-      console.log('UPDATED PRODUCT');
       res.redirect('/admin/products');
     })
     .catch(err => console.log(err));
@@ -57,9 +57,8 @@ exports.postEditProduct = (req, res, next) => {
 exports.postDeleteProduct = (req, res, next) => {
   const productId = req.body.productId;
   Product
-    .findByIdAndDelete(productId)
+    .deleteOne({ _id: productId, userId: req.user._id })
     .then(() => {
-      console.log('DELETED PRODUCT');
       res.redirect('/admin/products');
     })
     .catch(err => console.log(err));
