@@ -63,7 +63,7 @@ exports.postLogin = (req, res, next) => {
 };
 
 exports.postSignup = (req, res, next) => {
-  const { email, password, confirmPassword } = req.body;
+  const { email, password } = req.body;
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res
@@ -74,33 +74,25 @@ exports.postSignup = (req, res, next) => {
         errorMessage: errors.array()[0].msg
       });
   }
-  User
-    .findOne({ email })
-    .then(userDoc => {
-      if (userDoc) {
-        req.flash('error', 'Cet e-mail est deja utilisé, veuillez en utiliser un different');
-        return res.redirect('/signup');
-      }
-      return bcrypt.hash(password, 12)
-        .then(hashedPassword => {
-          const user = new User({
-            email,
-            password: hashedPassword,
-            cart: { items: [] }
-          });
-          return user.save();
-        })
-        .then(() => {
-          res.redirect('/login')
-          return transporter.sendMail({
-            from: '<online@shop.com>', // sender address
-            to: email, // list of receivers
-            subject: "Bienvenue Test", // Subject line
-            text: "Inscription finalisée", // plain text body
-            html: "<b>Inscription finalisée</b>", // html body
-          });
-        })
-        .catch(err => console.log(err));
+  bcrypt
+    .hash(password, 12)
+    .then(hashedPassword => {
+      const user = new User({
+        email,
+        password: hashedPassword,
+        cart: { items: [] }
+      });
+      return user.save();
+    })
+    .then(() => {
+      res.redirect('/login')
+      return transporter.sendMail({
+        from: '<online@shop.com>', // sender address
+        to: email, // list of receivers
+        subject: "Bienvenue Test", // Subject line
+        text: "Inscription finalisée", // plain text body
+        html: "<b>Inscription finalisée</b>", // html body
+      });
     })
     .catch(err => console.log(err));
 };
