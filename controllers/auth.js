@@ -65,13 +65,13 @@ exports.postLogin = (req, res, next) => {
 exports.postSignup = (req, res, next) => {
   const { email, password, confirmPassword } = req.body;
   const errors = validationResult(req);
-  if (!errors.isEmpty) {
+  if (!errors.isEmpty()) {
     return res
       .status(422)
       .render('auth/signup', {
         path: '/signup',
         pageTitle: 'S\'inscrire',
-        errorMessage: errors.array()
+        errorMessage: errors.array()[0].msg
       });
   }
   User
