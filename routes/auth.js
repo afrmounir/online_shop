@@ -14,9 +14,11 @@ router.post(
   '/login',
   [
     check('email', 'E-mail ou Mot de passe incorrect')
-      .isEmail(),
+      .isEmail()
+      .normalizeEmail(),
     check('password', 'E-mail ou Mot de passe incorrect')
       .isLength({ min: 5 })
+      .trim()
   ],
   authController.postLogin
 );
@@ -34,9 +36,11 @@ router.post(
               return Promise.reject('Cet e-mail est deja utilisé, veuillez en utiliser un different'); // async validation, we have to reach out database
             }
           });
-      }),
+      })
+      .normalizeEmail(),
     check('password', 'Veuillez entrez un mot de passe d\'au moins 5 caractères')
-      .isLength({ min: 5 }),
+      .isLength({ min: 5 })
+      .trim(),
     check('confirmPassword')
       .custom((value, { req }) => {
         if (value != req.body.password) {
@@ -44,6 +48,7 @@ router.post(
         }
         return true;
       })
+      .trim()
   ],
   authController.postSignup
 );
