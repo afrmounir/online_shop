@@ -27,7 +27,11 @@ exports.getSignup = (req, res, next) => {
   res.render('auth/signup', {
     path: '/signup',
     pageTitle: 'S\'inscrire',
-    errorMessage: req.flash('error')
+    errorMessage: req.flash('error'),
+    oldInput: { 
+      email: '', 
+      password: '', 
+      confirmPassword: '' }
   });
 };
 
@@ -36,6 +40,7 @@ exports.postLogin = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty) {
     return res
+      .status(422)
       .render('auth/login', {
         path: '/login',
         pageTitle: 'Se Connecter',
@@ -81,7 +86,8 @@ exports.postSignup = (req, res, next) => {
       .render('auth/signup', {
         path: '/signup',
         pageTitle: 'S\'inscrire',
-        errorMessage: errors.array()[0].msg
+        errorMessage: errors.array()[0].msg,
+        oldInput: { email, password, confirmPassword: req.body.confirmPassword }
       });
   }
   bcrypt
