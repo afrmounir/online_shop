@@ -39,7 +39,20 @@ exports.postAddProduct = (req, res, next) => {
       console.log('Created Product');
       res.redirect('/admin/products');
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      //   return res
+      //     .status(500)
+      //     .render('admin/edit-product', {
+      //       pageTitle: 'Ajouter Produit',
+      //       path: '/admin/add-product',
+      //       editing: false,
+      //       hasError: true,
+      //       product: req.body,
+      //       errorMessage: 'Erreur base de données, merci de réessayer ultérieurement',
+      //       validationErrors: []
+      //     });
+      res.redirect('/500');
+    });
 };
 
 exports.getEditProduct = (req, res, next) => {
