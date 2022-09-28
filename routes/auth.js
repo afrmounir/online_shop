@@ -37,8 +37,13 @@ router.post(
       }),
     check('password', 'Veuillez entrez un mot de passe d\'au moins 5 caractères')
       .isLength({ min: 5 }),
-    check('password', 'Les mots de passe doivent correspondent')
-      .equals('confirmPassword')
+    check('confirmPassword')
+      .custom((value, { req }) => {
+        if (value != req.body.password) {
+          throw new Error('Les mots de passe doivent correspondent');
+        }
+        return true;
+      })
   ],
   authController.postSignup
 );
