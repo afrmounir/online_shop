@@ -19,7 +19,12 @@ exports.getLogin = (req, res, next) => {
   res.render('auth/login', {
     pageTitle: 'Se Connecter',
     path: '/login',
-    errorMessage: req.flash('error')
+    errorMessage: req.flash('error'),
+    oldInput: {
+      email: '',
+      password: ''
+    },
+    validationErrors: []
   });
 };
 
@@ -46,7 +51,9 @@ exports.postLogin = (req, res, next) => {
       .render('auth/login', {
         path: '/login',
         pageTitle: 'Se Connecter',
-        errorMessage: errors.array()[0].msg
+        errorMessage: errors.array()[0].msg,
+        oldInput: { email, password },
+        validationErrors: errors.array()
       });
   }
 
@@ -54,8 +61,15 @@ exports.postLogin = (req, res, next) => {
     .findOne({ email })
     .then(user => {
       if (!user) {
-        req.flash('error', 'E-mail ou Mot de passe incorrect');
-        return res.redirect('/login');
+        return res
+          .status(422)
+          .render('auth/login', {
+            path: '/login',
+            pageTitle: 'Se Connecter',
+            errorMessage: 'E-mail ou Mot de passe incorrect',
+            oldInput: { email, password },
+            validationErrors: [] // to don't show exactly where is the error
+          });
       }
       bcrypt
         .compare(password, user.password)
@@ -68,8 +82,15 @@ exports.postLogin = (req, res, next) => {
               res.redirect('/');
             });
           }
-          req.flash('error', 'E-mail ou Mot de passe incorrect');
-          res.redirect('login');
+          return res
+          .status(422)
+          .render('auth/login', {
+            path: '/login',
+            pageTitle: 'Se Connecter',
+            errorMessage: 'E-mail ou Mot de passe incorrect',
+            oldInput: { email, password },
+            validationErrors: [] // to don't show exactly where is the error
+          });
         })
         .catch(err => {
           console.log(err);
@@ -82,7 +103,6 @@ exports.postLogin = (req, res, next) => {
 exports.postSignup = (req, res, next) => {
   const { email, password } = req.body;
   const errors = validationResult(req);
-  console.log(errors.array());
   if (!errors.isEmpty()) {
     return res
       .status(422)
