@@ -1,16 +1,36 @@
-const product = require('../models/product');
+const { validationResult } = require('express-validator');
+
 const Product = require('../models/product');
 
 exports.getAddProduct = (req, res, next) => {
   res.render('admin/edit-product', {
     pageTitle: 'Ajouter Produit',
     path: '/admin/add-product',
-    editing: false
+    editing: false,
+    hasError: false,
+    errorMessage: null,
+    validationErrors: []
   });
 };
 
 exports.postAddProduct = (req, res, next) => {
   const { title, imageURL, price, description } = req.body;
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res
+      .status(422)
+      .render('admin/edit-product', {
+        pageTitle: 'Ajouter Produit',
+        path: '/admin/add-product',
+        editing: false,
+        hasError: true,
+        product: req.body,
+        errorMessage: errors.array()[0].msg,
+        validationErrors: errors.array()
+      });
+  }
+
   const product = new Product({ title, imageURL, price, description, userId: req.user }); // mongoose pick the id himself from the entire object
 
   product
@@ -38,7 +58,10 @@ exports.getEditProduct = (req, res, next) => {
         pageTitle: 'Éditer Produit',
         path: '/admin/edit-product',
         editing: editMode,
-        product
+        product,
+        hasError: false,
+        errorMessage: null,
+        validationErrors: []
       });
     })
     .catch(err => console.log(err));
@@ -46,6 +69,28 @@ exports.getEditProduct = (req, res, next) => {
 
 exports.postEditProduct = (req, res, next) => {
   const productId = req.body.productId;
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res
+      .status(422)
+      .render('admin/edit-product', {
+        pageTitle: 'Éditer Produit',
+        path: '/admin/edit-product',
+        editing: true,
+        hasError: true,
+        product: {
+          title: req.body.title,
+          imageURL: req.body.imageURL,
+          price: req.body.price,
+          description: req.body.description,
+          _id: productId
+        },
+        errorMessage: errors.array()[0].msg,
+        validationErrors: errors.array()
+      });
+  }
+
   Product
     .updateOne({ _id: productId, userId: req.user._id.toString() }, req.body) //getEditProduct provide product data with the same field name in req.body
     .then(() => {
