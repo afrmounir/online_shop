@@ -17,11 +17,15 @@
                 class="<%= validationErrors.find(e => e.param === 'title') ? 'invalid' : '' %>"
                 type="text" name="title" id="title" value="<% if (editing || hasError) { %><%= product.title %><% } %>">
             </div>
-            <div class="form-control">
+            <!-- <div class="form-control">
                 <label for="imageURL">URL De L'image</label>
                 <input 
                 class="<%= validationErrors.find(e => e.param === 'imageURL') ? 'invalid' : '' %>"
                 type="text" name="imageURL" id="imageURL" value="<% if (editing || hasError) { %><%= product.imageURL %><% } %>">
+            </div> -->
+            <div class="form-control">
+                <label for="image">Image</label>
+                <input type="file" name="image" id="image" >
             </div>
             <div class="form-control">
                 <label for="price">Prix</label>
