@@ -15,8 +15,21 @@ exports.getAddProduct = (req, res, next) => {
 
 exports.postAddProduct = (req, res, next) => {
   const { title, price, description } = req.body;
-  const imageURL = req.file;
-  console.log(imageURL);
+  const image = req.file;
+  if (!image) {
+    return res
+      .status(422)
+      .render('admin/edit-product', {
+        pageTitle: 'Ajouter Produit',
+        path: '/admin/add-product',
+        editing: false,
+        hasError: true,
+        product: req.body,
+        errorMessage: 'Le fichier n\'est pas une image valide.',
+        validationErrors: []
+      });
+  }
+
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -33,6 +46,7 @@ exports.postAddProduct = (req, res, next) => {
       });
   }
 
+  const imageURL = image.path;
   const product = new Product({ title, imageURL, price, description, userId: req.user }); // mongoose pick the id himself from the entire object
 
   product
@@ -89,7 +103,9 @@ exports.getEditProduct = (req, res, next) => {
 };
 
 exports.postEditProduct = (req, res, next) => {
-  const productId = req.body.productId;
+  const { title, price, description, productId } = req.body;
+  const image = req.file;
+
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -101,10 +117,9 @@ exports.postEditProduct = (req, res, next) => {
         editing: true,
         hasError: true,
         product: {
-          title: req.body.title,
-          imageURL: req.body.imageURL,
-          price: req.body.price,
-          description: req.body.description,
+          title,
+          price,
+          description,
           _id: productId
         },
         errorMessage: errors.array()[0].msg,
@@ -113,9 +128,25 @@ exports.postEditProduct = (req, res, next) => {
   }
 
   Product
-    .updateOne({ _id: productId, userId: req.user._id.toString() }, req.body) //getEditProduct provide product data with the same field name in req.body
-    .then(() => {
-      res.redirect('/admin/products');
+    .findById(productId)
+    .then(product => {
+      if (product.userId.toString() !== req.user._id.toString()) {
+        return res.redirect('/');
+      }
+
+      product.title = title;
+      product.price = price;
+      product.description = description;
+      if (image) {
+        product.imageURL = image.path;
+      }
+
+      return product
+        .save()
+        .then(() => {
+          console.log('UPDATED PRODUCT');
+          res.redirect('/admin/products');
+        });
     })
     .catch(err => {
       const error = new Error(err);
