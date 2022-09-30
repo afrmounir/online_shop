@@ -156,6 +156,18 @@ exports.getCheckout = (req, res, next) => {
 
 exports.getInvoice = (req, res, next) => {
   const orderId = req.params.orderId;
+  Order
+    .findById(orderId)
+    .then(order => {
+      if (!order) {
+        return next(new Error('Pas de commande trouvée'));
+      }
+      if (order.user.userId.toString() !== req.user._id.toString()) {
+        return next(new Error('Utilisateur non autorisé'));
+      }
+    })
+    .catch(err => next(err));
+
   const invoiceName = 'invoice-' + orderId + '.pdf';
   const invoicePath = path.join('data', 'invoices', invoiceName);
 
