@@ -159,18 +159,38 @@ exports.postEditProduct = (req, res, next) => {
     });
 };
 
+// exports.postDeleteProduct = (req, res, next) => {
+//   const productId = req.body.productId;
+//   Product
+//     .findById(productId)
+//     .then(product => {
+//       if (!product) {
+//         return next(new Error('Produit non trouvé'));
+//       }
+//       if (product.userId.toString() === req.user._id.toString()) {
+//         fileHelper.deleteFile(product.imageURL);
+//       }
+//       return Product.deleteOne({ _id: productId, userId: req.user._id });
+//     })
+//     .then(() => {
+//       res.redirect('/admin/products');
+//     })
+//     .catch(err => {
+//       const error = new Error(err);
+//       error.httpStatusCode = 500;
+//       return next(error);
+//     });
+// };
+
 exports.postDeleteProduct = (req, res, next) => {
   const productId = req.body.productId;
   Product
-    .findById(productId)
+    .findOneAndDelete({ _id: productId, userId: req.user._id })
     .then(product => {
       if (!product) {
         return next(new Error('Produit non trouvé'));
       }
-      if (product.userId.toString() === req.user._id.toString()) {
-        fileHelper.deleteFile(product.imageURL);
-      }
-      return Product.deleteOne({ _id: productId, userId: req.user._id });
+      fileHelper.deleteFile(product.imageURL);
     })
     .then(() => {
       res.redirect('/admin/products');
