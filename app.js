@@ -93,6 +93,7 @@ app.use(errorController.get404);
 
 app.use((err, req, res, next) => {
   //res.redirect('500');
+  console.log(err);
   res.status(500).render('500', {
     pageTitle: 'Erreur 500',
     path: '/500'
