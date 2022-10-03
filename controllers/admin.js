@@ -193,7 +193,7 @@ exports.deleteProduct = (req, res, next) => {
       fileHelper.deleteFile(product.imageURL);
     })
     .then(() => {
-      res.status(200).json({ message: 'Success' });
+      res.status(200).json({ message: 'Produit supprimé' });
     })
     .catch(err => {
       res.status(500).json({ message: 'Échec suppression produit' });
