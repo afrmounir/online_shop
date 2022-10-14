@@ -9,6 +9,7 @@ const mongoDbStore = require('connect-mongodb-session')(session);
 const csrf = require('csurf');
 const flash = require('connect-flash');
 const multer = require('multer');
+const helmet = require('helmet');
 
 const errorController = require('./controllers/error');
 const User = require('./models/user');
@@ -45,7 +46,8 @@ app.set('views', 'views');
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 const authRoutes = require('./routes/auth');
-const { error } = require('console');
+
+app.use(helmet());
 
 app.use(express.urlencoded({ extended: true }));
 app.use(multer({ storage: fileStorage, fileFilter }).single('image'));
