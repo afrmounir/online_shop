@@ -10,6 +10,7 @@ const csrf = require('csurf');
 const flash = require('connect-flash');
 const multer = require('multer');
 const helmet = require('helmet');
+const compression = require('compression');
 
 const errorController = require('./controllers/error');
 const User = require('./models/user');
@@ -48,6 +49,7 @@ const shopRoutes = require('./routes/shop');
 const authRoutes = require('./routes/auth');
 
 app.use(helmet());
+app.use(compression()); // if the provider already provide this service remember to comment and remove package
 
 app.use(express.urlencoded({ extended: true }));
 app.use(multer({ storage: fileStorage, fileFilter }).single('image'));
