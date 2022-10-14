@@ -10,8 +10,8 @@ let transporter = nodemailer.createTransport({
   host: "smtp.mailtrap.io",
   port: 2525,
   auth: {
-    user: "258f05746c315e",
-    pass: "99a17f55e5e5e4"
+    user: process.env.MAILTRAP_USER, //"258f05746c315e",
+    pass: process.env.MAILTRAP_PASSWORD //"99a17f55e5e5e4"
   }
 });
 
