@@ -2,6 +2,7 @@ require('dotenv').config();
 
 const path = require('path');
 const fs = require('fs');
+const https = require('https');
 
 const express = require('express');
 const mongoose = require('mongoose');
@@ -25,6 +26,10 @@ const store = new mongoDbStore({
   collection: 'sessions'
 });
 const csrfProtection = csrf();
+
+// disable because handled by heroku
+// const privateKey = fs.readFileSync('server.key'); // its synchronous because we dont want to start the server until we read that file
+// const certificate = fs.readFileSync('server.cert');
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -116,5 +121,9 @@ app.use((err, req, res, next) => {
 
 mongoose
   .connect(MONGODB_URI)
-  .then(() => app.listen(process.env.PORT || 3000))
+  .then(() => {
+    // https  //disable because handled by heroku
+    // .createServer({ key: privateKey, cert: certificate }, app)
+    app.listen(process.env.PORT || 3000);
+  })
   .catch(err => console.log(err));
