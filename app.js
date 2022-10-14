@@ -60,7 +60,15 @@ const accessLogStream = fs.createWriteStream(
   { flags: 'a' } //a => append, to not erase file but write continuously
 );
 
-app.use(helmet());
+app.use(helmet.contentSecurityPolicy({
+  directives: {
+    'default-src': ["'self'"],
+    'script-src': ["'self'", "'unsafe-inline'", 'js.stripe.com'],
+    'style-src': ["'self'", "'unsafe-inline'", 'fonts.googleapis.com'],
+    'frame-src': ["'self'", 'js.stripe.com'],
+    'font-src': ["'self'", 'fonts.googleapis.com', 'fonts.gstatic.com']
+  },
+}));
 app.use(compression()); // if the provider already provide this service remember to comment and remove package
 app.use(morgan('combined', { stream: accessLogStream })); // if the provider already provide this service remember to comment and remove package
 

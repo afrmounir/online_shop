@@ -20,7 +20,7 @@
 				<button id="order-btn" class="btn">Passez au paiement</button>
 				<script src="https://js.stripe.com/v3/"></script>
 				<script>
-					const stripe = Stripe(process.env.STRIPE_KEY_FRONT);
+					const stripe = Stripe("pk_test_51LomksHZA6ZqZXRINAV0hFfZzKfNvImhyMRwEkPt75IwP4ftKI894xUY3cSyWpauL3ybmZSHQRjqIJjwb6NpyyGl00jibHqomg");
 					const orderBtn = document.getElementById('order-btn');
 					orderBtn.addEventListener('click', () => {
 						stripe.redirectToCheckout({
