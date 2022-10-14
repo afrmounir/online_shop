@@ -105,7 +105,3 @@ dist
 
 # .env
 .env
-
-# customers files
-images/
-data/invoices/
