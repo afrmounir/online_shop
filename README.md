@@ -12,7 +12,8 @@
   <p align="center">
     Server-side rendered views online shop (including checkout, payments, uploading files, PDF invoices, e-mails).
     <br />
-    It's hosted on heroku and currently live at <a href="https://online-shop-node-express-mongo.herokuapp.com">online-shop-node-express-mongo.herokuapp.com</a>
+    <br />
+    It's hosted on heroku and currently live at <a href="https://online-shop-node-express-mongo.herokuapp.com">online-shop-node-express-mongo.herokuapp.com.</a>
     It's free hosting so there is no file persistence. Also the server goes to sleep and redeploys on demand so the first load will be slow.
     <a href="https://github.com/afrmounir/online_shop"><strong>Explore the docs »</strong></a>
     <br />
@@ -118,7 +119,7 @@ Features:
    ```sh
    npm start
    ```
-5. Open 'http://localhost:3000' in your browser
+5. Open 'http://localhost:3000' in Chrome
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -129,6 +130,7 @@ Features:
 
 - [x] Rendering HTML Dynamically (on the Server)
 - [x] Working with MongoDb and Mongoose
+- [x] Shop structure (navigation, adding, storing, editing and deleting products)
 - [x] Sessions & Cookies
 - [x] Sending E-mails
 - [x] Improve authentication (CSRF protection & reset password token link)
@@ -146,5 +148,5 @@ Features:
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
-[product-screenshot]: public/images/capture.png
+[product-screenshot]: public/images/capture.gif
 
