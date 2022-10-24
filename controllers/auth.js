@@ -1,19 +1,12 @@
 const crypto = require('crypto');
 
 const bcrypt = require('bcryptjs');
-const nodemailer = require('nodemailer');
+const sgMail = require('@sendgrid/mail');
 const { validationResult } = require('express-validator')
 
 const User = require('../models/user');
 
-let transporter = nodemailer.createTransport({
-  host: "smtp.mailtrap.io",
-  port: 2525,
-  auth: {
-    user: process.env.MAILTRAP_USER, 
-    pass: process.env.MAILTRAP_PASSWORD 
-  }
-});
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 exports.getLogin = (req, res, next) => {
   res.render('auth/login', {
@@ -83,14 +76,14 @@ exports.postLogin = (req, res, next) => {
             });
           }
           return res
-          .status(422)
-          .render('auth/login', {
-            path: '/login',
-            pageTitle: 'Se Connecter',
-            errorMessage: 'E-mail ou Mot de passe incorrect',
-            oldInput: { email, password },
-            validationErrors: [] // to don't show exactly where is the error
-          });
+            .status(422)
+            .render('auth/login', {
+              path: '/login',
+              pageTitle: 'Se Connecter',
+              errorMessage: 'E-mail ou Mot de passe incorrect',
+              oldInput: { email, password },
+              validationErrors: [] // to don't show exactly where is the error
+            });
         })
         .catch(err => {
           console.log(err);
@@ -130,13 +123,15 @@ exports.postSignup = (req, res, next) => {
     })
     .then(() => {
       res.redirect('/login')
-      return transporter.sendMail({
-        from: '<online@shop.com>', // sender address
-        to: email, // list of receivers
-        subject: "Bienvenue Test", // Subject line
-        text: "Inscription finalisée", // plain text body
-        html: "<b>Inscription finalisée</b>", // html body
-      });
+      const msg = {
+        to: email, // Change to your recipient
+        from: process.env.VERIFIED_SENDGRID_SENDER, // Change to your verified sender
+        subject: 'Bienvenue sur online_shop',
+        text: 'Inscription finalisée - https://github.com/afrmounir',
+        html: '<b>inscription finalisée</b><br><a href="https://github.com/afrmounir">https://github.com/afrmounir</a>',
+      }
+      return sgMail
+        .send(msg);
     })
     .catch(err => {
       const error = new Error(err);
@@ -180,15 +175,19 @@ exports.postResetPassword = (req, res, next) => { // generate a token and send i
       })
       .then(() => {
         res.redirect('/');
-        transporter.sendMail({
-          from: '<online@shop.com>', // sender address
-          to: req.body.email, // list of receivers
-          subject: "Réinitialisez votre mot de passe", // Subject line
+        const msg = {
+          to: req.body.email, // Change to your recipient
+          from: process.env.VERIFIED_SENDGRID_SENDER, // Change to your verified sender
+          subject: 'Réinitialisez votre mot de passe',
           html: `
-            <p>Vous avez demandé à réinitialisé votre mot de passe</p>
-            <p>Cliquez ici <a href="/http://localhost:3000/reset/${token}" >pour choisir un nouveau mot de passe</p>
-          `, // html body
-        });
+          <p>Vous avez demandé à réinitialisé votre mot de passe</p>
+          <p>Cliquez ici <a href="/http://localhost:3000/reset/${token}" >pour choisir un nouveau mot de passe</p>
+          <br>
+          <a href="https://github.com/afrmounir">https://github.com/afrmounir</a>
+        `
+        };
+        return sgMail
+          .send(msg);
       })
       .catch(err => {
         const error = new Error(err);
