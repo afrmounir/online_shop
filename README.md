@@ -110,16 +110,19 @@ Features:
    ```
    MONGODB_KEY=""
    STRIPE_KEY=""
-   STRIPE_KEY_FRONT="" // The public Stripe key sent to the front-end
    SENDGRID_API_KEY=""
-   VERIFIED_SENDGRID_SENDER="your verified sender"
+   VERIFIED_SENDGRID_SENDER="your verified sender email"
    SESSION_SECRET=""
    ```
-4. Run the project
+4. In 'views/shop/checkout.ejs' set your own public Stripe API Key
+   ```
+   const stripe = Stripe("STRIPE_PUBLIC_KEY_");
+   ```
+5. Run the project
    ```sh
    npm start
    ```
-5. Open 'http://localhost:3000' in Chrome
+6. Open 'http://localhost:3000' in Chrome
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
