@@ -111,8 +111,8 @@ Features:
    MONGODB_KEY=""
    STRIPE_KEY=""
    STRIPE_KEY_FRONT="" // The public Stripe key sent to the front-end
-   MAILTRAP_USER=""
-   MAILTRAP_PASSWORD=""
+   SENDGRID_API_KEY=""
+   VERIFIED_SENDGRID_SENDER="your verified sender"
    SESSION_SECRET=""
    ```
 4. Run the project
